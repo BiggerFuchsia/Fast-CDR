@@ -1,0 +1,44 @@
+import("//build/package.gni")
+import("//src/sys/build/components.gni")
+
+config("config") {
+  cflags = [ "-Wno-missing-field-initializers" ]
+  cflags += [ "-Wno-conversion" ]
+
+  include_dirs = [
+    "./include",
+    "./build/include",
+  ]
+
+  defines = [
+    "FASTCDR_FUCHSIA",
+  ]
+}
+
+group("Fast-CDR") {
+  deps = [
+    ":lib",
+  ]
+
+  public_configs = [ ":config" ]
+}
+
+static_library("lib") {
+  output_name = "fastcdr"
+
+  sources = [
+    "src/cpp/Cdr.cpp",
+    "src/cpp/FastCdr.cpp",
+    "src/cpp/FastBuffer.cpp",
+    "src/cpp/exceptions/Exception.cpp",
+    "src/cpp/exceptions/NotEnoughMemoryException.cpp",
+    "src/cpp/exceptions/BadParamException.cpp",
+  ]
+
+  configs += [ "//build/config:no_rtti" ]
+  configs -= [ "//build/config:no_rtti" ]
+  configs += [ "//build/config:no_exceptions" ]
+  configs -= [ "//build/config:no_exceptions" ]
+
+  configs += [ ":config" ]
+}
